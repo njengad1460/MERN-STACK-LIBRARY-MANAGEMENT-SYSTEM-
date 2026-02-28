@@ -16,13 +16,25 @@ const transactionSchema = new mongoose.Schema({
     enum: ['issue', 'return'],
     required: true
   },
+  requestedAt: {
+    type: Date,
+    default: Date.now
+  },
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected', 'completed'],
     default: 'pending'
   },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   issuedAt: {
     type: Date
+  },
+  notes: {
+    type: String,
+    trim: true
   },
   dueDate: {
     type: Date
@@ -30,17 +42,9 @@ const transactionSchema = new mongoose.Schema({
   returnedAt: {
     type: Date
   },
-  requestedAt: {
-    type: Date,
-    default: Date.now
-  },
-  approvedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  notes: {
-    type: String,
-    trim: true
+  isOverdue: {
+    type: Boolean,
+    default: false
   },
   fineAmount: {
     type: Number,
@@ -51,10 +55,6 @@ const transactionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  isOverdue: {
-    type: Boolean,
-    default: false
-  }
 }, {
   timestamps: true
 });
@@ -64,8 +64,8 @@ transactionSchema.methods.checkOverdue = function() {
   if (this.dueDate && this.status === 'approved' && !this.returnedAt) {
     this.isOverdue = new Date() > this.dueDate;
     if (this.isOverdue) {
-      const daysOverdue = Math.ceil((new Date() - this.dueDate) / (1000 * 60 * 60 * 24));
-      this.fineAmount = daysOverdue * 20; // Ksh.20 per day
+      const daysOverdue = Math.ceil((new Date() - this.dueDate) / (1000 * 60 * 60 * 24)); // milliseconds_per_day
+      this.fineAmount = daysOverdue * 20; // sh.20 per day
     }
   }
   return this.save();

@@ -11,10 +11,10 @@ const bookSchema = new mongoose.bookSchema ({
         trim: true,
         required : true
     },
-    isbn : {
+    isbn : { // Unique identifier for books
         type : String,
         unique: true,
-        sparse : true,
+        sparse : true, // allows multiple documents without an ISBN (optional fields can have null values without violating uniqueness)
         trim : true
     },
     genre : {
@@ -37,7 +37,7 @@ const bookSchema = new mongoose.bookSchema ({
         type: Number,
         min: 1
     },
-    coverImage :{
+    coverImage :{ // Stores a URL or file path to the book's cover
         type: String,
         trim: true
     },
@@ -60,9 +60,9 @@ const bookSchema = new mongoose.bookSchema ({
         }
     },
     location:{
-        section: String,
-        shelf: String,
-        floor:String
+        section: String, // e.g., "Fiction", "Science"
+        shelf: String,   // e.g., "A1", "B3"
+        floor:String     // e.g., "Ground", "2nd"
     },
     tags: [String],
     rating :{
@@ -82,19 +82,21 @@ const bookSchema = new mongoose.bookSchema ({
         ref: 'User',
         required : true
     },
-    isActive :{
+    isActive :{  // soft delete. Books can be marked inactive instead of permanently deleted
         type: Boolean,
         default: true
     },
-    featured: {
+    featured: { // marks books to display on the homepage/featured section
         type:Boolean,
         dafault: false
     },
 }, {
-    timestamps: true
+    timestamps: true // Auto-adds createdAt and updatedAt
 })
 
 // Check if the book is available
+//At least 1 copy is available on the shelf, AND
+//The book is active 
 
 bookSchema.methods.isAvailable = function(){
     return this.availability.availableCopies > 0 && this.isActive;
