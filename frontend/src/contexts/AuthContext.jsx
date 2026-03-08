@@ -8,7 +8,7 @@ export const useAuth = () => { // you just use useAuth() Instead of importing Au
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
-  } // f you accidentally try to use authentication data in a component that isn't wrapped by your AuthProvider, this error will tell you exactly what went wrong
+  } // if you accidentally try to use authentication data in a component that isn't wrapped by your AuthProvider, this error will tell you exactly what went wrong
   return context;
 };
 
@@ -21,10 +21,13 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token'); 
     const userData = localStorage.getItem('user');
     
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-      // Verify token is still valid
-      authAPI.getMe()  // send your data to backend to verify the token is still valid
+    if (token) {
+        try {
+            setUser(JSON.parse(userData));
+        } catch (error) {
+            localStorage.removeItem('user');// Verify token is still vali
+        } 
+        authAPI.getMe()  // send your data to backend to verify the token is still valid
         .then(response => {
           setUser(response.data);
           localStorage.setItem('user', JSON.stringify(response.data));
