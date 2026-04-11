@@ -1,13 +1,13 @@
 # Use lightweight Node image
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Copy only dependency files first (for caching)
 COPY package.json pnpm-lock.yaml ./
+
+# Enable corepack and activate the exact pnpm version
+RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
 
 # Install only production dependencies
 RUN pnpm install --frozen-lockfile --prod
