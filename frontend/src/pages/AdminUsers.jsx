@@ -37,7 +37,6 @@ const AdminUsers = () => {
   const [totalPages, setTotalPages] = useState(1);
 
 
-  // eslint-disable-next-line no-undef
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
