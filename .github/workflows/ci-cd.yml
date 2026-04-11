@@ -94,7 +94,14 @@ jobs:
           aws-region: af-south-1
 
       - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DIST_ID }} --paths "/*"
+        env:
+          DIST_ID: ${{ secrets.DIST_ID }}
+        run: |
+          if [ -z "$DIST_ID" ]; then
+            echo "Error: DIST_ID secret is not set"
+            exit 1
+          fi
+          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
 
   # Example Deployment Job (Commented out)
   # deploy:
