@@ -22,6 +22,14 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
   });
 
+// Handle port already in use
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Run: fuser -k ${PORT}/tcp`);
+    process.exit(1);
+  }
+});
+
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Rejection:', err.message);
