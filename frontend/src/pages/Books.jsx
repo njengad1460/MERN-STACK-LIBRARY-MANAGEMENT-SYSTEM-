@@ -726,7 +726,7 @@ const Books = () => {
               <p className="text-gray-500 max-w-md mx-auto mb-10 font-medium">
                 {searchTerm 
                   ? 'Our literary archives did not match your query. Try different terms.' 
-                  : 'The library catalog is currently being updated by our curators.'
+                  : 'The library catalog is currently being updated.'
                 }
               </p>
               {searchTerm && (
@@ -735,7 +735,7 @@ const Books = () => {
                     setSearchTerm('');
                     fetchBooks();
                   }}
-                  className="btn-modern !py-3 !px-10"
+                  className="btn-modern py-3! px-10"
                 >
                   Clear Search
                 </button>
