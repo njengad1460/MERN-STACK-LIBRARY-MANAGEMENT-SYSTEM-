@@ -40,11 +40,15 @@ export const AuthProvider = ({ children }) => {
         const response = await authAPI.getMe();
         setUser(response.data);
         localStorage.setItem('user', JSON.stringify(response.data));
-      } catch {
-        // Token expired or invalid — clean up
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
+      } catch (error) {
+        // Only clear session on auth errors, not network/server errors
+        const status = error.response?.status;
+        if (status === 401 || status === 403) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
+        // On network errors or 5xx, keep the cached user so they stay logged in
       } finally {
         setLoading(false);
       }
