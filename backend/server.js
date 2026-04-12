@@ -7,9 +7,6 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 
-// Load env vars
-dotenv.config();
-
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
