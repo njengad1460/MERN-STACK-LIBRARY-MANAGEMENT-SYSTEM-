@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('MongoDB connected successfully');
+    console.log('MongoDB connected');
     
     // Start server only after DB connection
     server.listen(PORT, () => {
